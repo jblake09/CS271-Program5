@@ -24,6 +24,8 @@ programTitle		BYTE	"Sorting Random Integers			Programmed by Jeff Blake", 0
 instruct1			BYTE	"This program generates random numbers in the range [100 .. 999],", 0
 instruct2			BYTE	"displays the original list, sorts the list, and calculates the", 0
 instruct3			BYTE	"median value. Finally, it displays the list sorted in descending order."
+request				DWORD	?	; User inputted number that determines number of random integers to generate
+
 
 .code
 main PROC
@@ -63,4 +65,23 @@ intro	PROC
 
 	ret
 intro	ENDP
+
+;Procedure to get value for number of random intergers to generate
+;receives: none
+;returns: user input values for global variables compNum
+;preconditions:  none
+;registers changed: eax, edx
+getData	PROC
+
+;get an integer for CompNum
+
+	mov		edx, OFFSET instruct2
+	call	WriteString
+	call	ReadInt
+	call	validate
+	mov		compNum, eax
+
+	ret
+getData	ENDP
+
 END main
