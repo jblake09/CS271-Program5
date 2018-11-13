@@ -17,12 +17,50 @@ MIN = 10
 MAX = 200
 LO = 100
 HI = 999
+
 .data
-; (insert variable definitions here)
+
+programTitle		BYTE	"Sorting Random Integers			Programmed by Jeff Blake", 0
+instruct1			BYTE	"This program generates random numbers in the range [100 .. 999],", 0
+instruct2			BYTE	"displays the original list, sorts the list, and calculates the", 0
+instruct3			BYTE	"median value. Finally, it displays the list sorted in descending order."
+
 .code
 main PROC
-; (insert executable instructions here)
+
+	call	intro
+
 exit  ; exit to operating system
 main ENDP
+
 ; (insert additional procedures here)
+
+;Procedure to introduce the program ,and give user instructions.
+;receives: none
+;returns: none
+;preconditions:  none
+;registers changed: edx
+intro	PROC
+
+;Display your name and program title on the output screen.
+	mov		edx, OFFSET programTitle
+	call	WriteString
+	call	CrLf
+	call	Crlf
+	call	CrLf
+;Give User insructions
+	mov		edx, OFFSET instruct1
+	call	WriteString
+	Call	CrLf
+	mov		edx, OFFSET instruct2
+	call	WriteString
+	call	CrLf
+	mov		edx, OFFSET instruct3
+	call	WriteString
+	Call	CrLf
+	call	CrLf
+
+
+	ret
+intro	ENDP
 END main
