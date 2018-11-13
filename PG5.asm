@@ -12,7 +12,11 @@ TITLE Assignment 5     (PG5.asm)
 ;				Calculate and display the median value, rounded to the nearest integer.
 ;				Display the sorted list, 10 numbers per line.
 INCLUDE Irvine32.inc
-; (insert constant definitions here)
+
+MIN = 10
+MAX = 200
+LO = 100
+HI = 999
 .data
 ; (insert variable definitions here)
 .code
