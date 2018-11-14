@@ -25,12 +25,15 @@ instruct1			BYTE	"This program generates random numbers in the range [100 .. 999
 instruct2			BYTE	"displays the original list, sorts the list, and calculates the", 0
 instruct3			BYTE	"median value. Finally, it displays the list sorted in descending order."
 request				DWORD	?	; User inputted number that determines number of random integers to generate
+prompt				BYTE	"How many numbers should be generated? [10 .. 200]: ", 0
 
 
 .code
 main PROC
 
 	call	intro
+	push	OFFSET request
+	call	getData
 
 exit  ; exit to operating system
 main ENDP
@@ -67,19 +70,23 @@ intro	PROC
 intro	ENDP
 
 ;Procedure to get value for number of random intergers to generate
-;receives: none
-;returns: user input values for global variables compNum
+;receives: addresses of parameters on the system stack
+;returns: user input values number of random integers to genrate
 ;preconditions:  none
-;registers changed: eax, edx
+;registers changed: eax, ebx, edx
 getData	PROC
 
 ;get an integer for CompNum
 
-	mov		edx, OFFSET instruct2
+	push	ebp
+	mov		ebp, esp						;set up stack
+	mov		ebx, [ebp+8]
+	mov		edx, OFFSET prompt
 	call	WriteString
 	call	ReadInt
-	call	validate
-	mov		compNum, eax
+	mov		[ebx], eax
+	pop		ebp
+	ret		4
 
 	ret
 getData	ENDP
