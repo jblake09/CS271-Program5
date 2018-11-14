@@ -26,6 +26,7 @@ instruct2			BYTE	"displays the original list, sorts the list, and calculates the
 instruct3			BYTE	"median value. Finally, it displays the list sorted in descending order."
 request				DWORD	?	; User inputted number that determines number of random integers to generate
 prompt				BYTE	"How many numbers should be generated? [10 .. 200]: ", 0
+randomNums			DWORD	MAX		DUP(?)
 
 
 .code
@@ -34,17 +35,21 @@ main PROC
 	call	intro
 	push	OFFSET request
 	call	getData
+	push	OFFSET randomNums
+	push	request
+	call	fillArray
 
 exit  ; exit to operating system
 main ENDP
 
 ; (insert additional procedures here)
-
+;*********************************************************************************************
 ;Procedure to introduce the program ,and give user instructions.
 ;receives: none
 ;returns: none
 ;preconditions:  none
 ;registers changed: edx
+;*********************************************************************************************
 intro	PROC
 
 ;Display your name and program title on the output screen.
@@ -69,11 +74,13 @@ intro	PROC
 	ret
 intro	ENDP
 
+;*********************************************************************************************
 ;Procedure to get value for number of random intergers to generate
 ;receives: addresses of parameters on the system stack
 ;returns: user input values number of random integers to genrate
 ;preconditions:  none
 ;registers changed: eax, ebx, edx
+;*********************************************************************************************
 getData	PROC
 
 ;get an integer for CompNum
@@ -81,14 +88,40 @@ getData	PROC
 	push	ebp
 	mov		ebp, esp						;set up stack
 	mov		ebx, [ebp+8]
-	mov		edx, OFFSET prompt
+	mov		edx, OFFSET prompt				; prompt user
 	call	WriteString
-	call	ReadInt
-	mov		[ebx], eax
+	call	ReadInt							; get users number
+	mov		[ebx], eax						; tore in global variable request
 	pop		ebp
 	ret		4
 
 	ret
 getData	ENDP
+
+;*********************************************************************************************
+;Procedure to fill the array with random integers
+;receives: addresses of array and value of request on the system stack
+;returns: array filled with random integers
+;preconditions:  none
+;registers changed: eax, ebx, ecx, edi
+;*********************************************************************************************
+fillArray	PROC
+
+;get an integer for CompNum
+
+	call	Radomize
+	push	ebp
+	mov		ebp, esp						;set up stack
+	mov		ecx, [ebp+8]
+	mov		edi, [ebx+12]
+	mov		ebx, 0
+
+again:
+	mov		eax, ebx
+	pop		ebp
+	ret		4
+
+	ret
+fillArray	ENDP
 
 END main
