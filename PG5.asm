@@ -38,6 +38,9 @@ main PROC
 	push	OFFSET randomNums
 	push	request
 	call	fillArray
+	push	OFFSET randomNums
+	push	request
+	call	displayList
 
 exit  ; exit to operating system
 main ENDP
@@ -94,8 +97,6 @@ getData	PROC
 	mov		[ebx], eax						; tore in global variable request
 	pop		ebp
 	ret		4
-
-	ret
 getData	ENDP
 
 ;*********************************************************************************************
@@ -109,19 +110,34 @@ fillArray	PROC
 
 ;get an integer for CompNum
 
-	call	Radomize
+	call	Randomize
 	push	ebp
 	mov		ebp, esp						;set up stack
 	mov		ecx, [ebp+8]
-	mov		edi, [ebx+12]
-	mov		ebx, 0
+	mov		edi, [ebp+12]
+	mov		ebx, 5
 
 again:
 	mov		eax, ebx
-	pop		ebp
-	ret		4
+	mov		[edi], eax
+	add		edi, 4
+	inc		ebx
+	loop	again
 
-	ret
+	pop		ebp
+	ret		8
 fillArray	ENDP
+
+;*********************************************************************************************
+;Procedure to display contents of array
+;receives: address of array and value of request on system stack
+;returns: printed array 10 items per line
+;preconditions:  none
+;registers changed: eax, ebx, edx, esi
+;*********************************************************************************************
+displayList	PROC
+
+
+displayList	ENDP
 
 END main
