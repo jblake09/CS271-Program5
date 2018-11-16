@@ -118,11 +118,11 @@ fillArray	PROC
 	mov		ebx, 0
 
 again:
-	mov		eax, HI
-	sub		eax, LO
-	inc		eax
-	call	RandomRange
-	add		eax, LO
+	mov		eax, HI				;From lecture 20 Random Rnge Example
+	sub		eax, LO				;
+	inc		eax					;
+	call	RandomRange			;
+	add		eax, LO				;
 	mov		[edi], eax
 	add		edi, 4
 	inc		ebx
@@ -148,7 +148,9 @@ displayList	PROC
 	mov		edx, 0
 
 more:
-	mov	eax,[esi]	;start with last element
+	cmp		ecx, 0
+	je		quitt
+	mov		eax,[esi]	;start with last element
 	call	WriteDec			;display n-squared
 	mov		al,' '
 	call	WriteChar
@@ -156,7 +158,19 @@ more:
 	call	WriteChar
 	call	WriteChar
 	add		esi, 4
+	cmp		edx, 9
+	jge		NewLine
+	inc		edx
 	loop	more
+moreDone:
+	jmp		quitt
+NewLine:
+	call	CrLf
+	mov		edx, 0
+	dec		ecx
+	jmp		more
+quitt:
+	call	Crlf
 	
 	pop	ebp
 	ret	8
