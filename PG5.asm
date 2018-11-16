@@ -115,7 +115,7 @@ fillArray	PROC
 	mov		ebp, esp						;set up stack
 	mov		ecx, [ebp+8]
 	mov		edi, [ebp+12]
-	mov		ebx, 5
+	mov		ebx, 0
 
 again:
 	mov		eax, ebx
@@ -137,6 +137,25 @@ fillArray	ENDP
 ;*********************************************************************************************
 displayList	PROC
 
+	push	ebp
+	mov		ebp,esp
+	mov		ecx,[ebp+8]		;count in ecx
+	mov		esi,[ebp+12]		;address of array in esi
+	mov		edx, 0
+
+more:
+	mov	eax,[esi]	;start with last element
+	call	WriteDec			;display n-squared
+	mov		al,' '
+	call	WriteChar
+	mov		al,32
+	call	WriteChar
+	call	WriteChar
+	add		esi, 4
+	loop	more
+	
+	pop	ebp
+	ret	8
 
 displayList	ENDP
 
