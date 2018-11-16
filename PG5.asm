@@ -118,7 +118,11 @@ fillArray	PROC
 	mov		ebx, 0
 
 again:
-	mov		eax, ebx
+	mov		eax, HI
+	sub		eax, LO
+	inc		eax
+	call	RandomRange
+	add		eax, LO
 	mov		[edi], eax
 	add		edi, 4
 	inc		ebx
