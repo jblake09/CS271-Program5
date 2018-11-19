@@ -28,7 +28,8 @@ request				DWORD	?	; User inputted number that determines number of random integ
 prompt				BYTE	"How many numbers should be generated? [10 .. 200]: ", 0
 outRange			BYTE	"Invalid Input", 0
 randomNums			DWORD	MAX		DUP(?)
-
+title1				BYTE	"The unsorted random numbers:", 0
+title2				BYTE	"The sorted list:", 0
 
 .code
 main PROC
@@ -45,6 +46,14 @@ main PROC
 	push	OFFSET randomNums
 	push	request
 	call	fillArray
+	push	OFFSET title1
+	push	OFFSET randomNums
+	push	request
+	call	displayList
+	push	OFFSET randomNums
+	push	request
+	call	sortList
+	push	OFFSET title2
 	push	OFFSET randomNums
 	push	request
 	call	displayList
@@ -169,6 +178,9 @@ displayList	PROC
 
 	push	ebp
 	mov		ebp,esp
+	mov		edx,[ebp+16]		; display title
+	call	WriteString
+	call	Crlf
 	mov		ecx,[ebp+8]		;count in ecx
 	mov		esi,[ebp+12]		;address of array in esi
 	mov		edx, 0
@@ -199,8 +211,45 @@ quitt:
 	call	Crlf
 	
 	pop	ebp
-	ret	8
+	ret	12
 
 displayList	ENDP
+
+;*********************************************************************************************
+;Procedure to sort the array in decending order
+;receives: address of array and value of request on system stack
+;returns: a sorted array
+:Notes: Bubble Sort implemented from book example
+;preconditions:  none
+;registers changed: eax, ebx, edx, esi
+;*********************************************************************************************
+sortList	PROC
+
+	push	ebp
+	mov		ebp,esp
+	mov		ecx, [ebp+8]	
+	dec		ecx				; decrement value by 1
+L1:
+	push	ecx				; save outer loop count
+	mov		esi, [ebp+12]	; point to first value
+L2:
+	mov		eax, [esi]		; get array value
+	cmp		[esi+4], eax	; compare arrary value with value next to it
+	jl		L3				; if ESI > ESI+4, no swap
+	xchg	eax, [esi+4]	; exchange the pair of values
+	mov		[esi], eax
+L3:
+	add		esi, 4			; move both pointers forward
+	loop	L2				; inner loop
+
+	pop		ecx				; retrieve outer loop count
+	loop	L1				; repeat the outer loop
+	
+	pop	ebp
+	ret	8
+
+sortList	ENDP
+
+
 
 END main
